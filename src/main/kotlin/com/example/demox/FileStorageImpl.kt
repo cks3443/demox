@@ -14,7 +14,8 @@ import java.util.stream.Stream
 @Service
 class FileStorageImpl : FileStorage {
   val log = LoggerFactory.getLogger(this::class.java)
-  val rootLocation = Paths.get("C:/unrealPakFiles")
+//  val rootLocation = Paths.get("C:/unrealPakFiles")
+  val rootLocation = Paths.get("C:/testUploadFiles")
   
   override fun store(file: MultipartFile) {
     if (!Files.isDirectory(this.rootLocation)) {

@@ -21,9 +21,19 @@ class MainController {
   @ResponseBody
   fun getGeoJson(@RequestParam lat: Double, @RequestParam lon: Double) = jsonService.getGeoJsonInBox(lat, lon)
   
+  @GetMapping("/getgeojson_in_range")
+  @ResponseBody
+  fun getGeoJsonInRange(
+    @RequestParam lat: Double,
+    @RequestParam lon: Double,
+    @RequestParam range: Int
+  ) =
+    jsonService.getGeoJsonInRange(lat, lon, range)
+  
   @GetMapping("/getgeojsonlist")
   @ResponseBody
-  fun getGeoJsonFileList(@RequestParam lat: Double, @RequestParam lon: Double) = jsonService.getGeoJsonFileList(lat, lon)
+  fun getGeoJsonFileList(@RequestParam lat: Double, @RequestParam lon: Double) =
+    jsonService.getGeoJsonFileList(lat, lon)
   
   @GetMapping("/gettiflist")
   @ResponseBody

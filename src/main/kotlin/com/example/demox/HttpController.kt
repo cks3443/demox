@@ -1,7 +1,9 @@
 package com.example.demox
 
 import com.example.demox.domain.Pak
+import com.example.demox.domain.PakList
 import com.example.demox.repository.PakRepository
+import com.example.demox.service.PakService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.io.Resource
 import org.springframework.http.HttpHeaders
@@ -26,6 +28,9 @@ class HttpController {
   
   @Autowired
   lateinit var pakRepository: PakRepository
+  
+  @Autowired
+  lateinit var pakService: PakService
   
   @GetMapping("/hello")
   fun home(): String {
@@ -82,14 +87,41 @@ class HttpController {
   
   @PostMapping("/upload/pakdb")
   @Transactional
-  fun uploadPakDb(@RequestBody pakdb: MutableList<Pak>): String {
-    println(pakdb.toString())
+  fun uploadPakDb(@RequestBody pakdb: PakList): String {
     return try {
-      pakRepository.saveAll(pakdb)
+      val _paklist = pakdb.PakDB
+      pakRepository.saveAll(_paklist!!)
       "ok"
     } catch (e: Exception) {
       "fail"
     }
     
+  }
+  
+  @PostMapping("/download/pakdb")
+  fun downloadPakDb(): PakList? {
+    return try {
+      var paks = PakList()
+      paks.PakDB = this.pakService.findAll()
+      paks
+    } catch (e: Exception) {
+      null
+    }
+  }
+  
+  @PostMapping("/getpakhashs")
+  fun getPakHashs(@RequestBody pakdb: PakList): PakList {
+    val pak_container = mutableListOf<Pak>()
+    val _paklist = pakdb.PakDB
+    
+    _paklist?.forEach { pak ->
+      val pakFromRepo: Pak? = pakRepository.findPakByPakId(pak.PakId!!)
+      pakFromRepo?.let { pak_container.add(it) }
+    }
+    
+    val paklist = PakList()
+    paklist.PakDB = pak_container
+    
+    return paklist
   }
 }
