@@ -106,6 +106,39 @@ class JsonService {
   }
   
   @Throws
+  fun getGeoJsonFileListInRange(lat: Double, lon: Double, range: Int): String {
+    val list = convertLatLonToUTMK(lat, lon)
+    val x = list[0] + 1000
+    val y = list[1] + 1000
+    val jlist = jsonRepo.getGeoJsonFileListInRange(x, y, range)
+    
+    val filelist = mutableListOf<String>()
+    
+    val parser = JSONParser()
+    
+    for (jj in jlist) {
+      
+      val obj: JSONObject = parser.parse(FileReader(_Path4 + jj.filename)) as JSONObject
+      
+      val features: JSONArray? = obj.get("features") as JSONArray?
+      
+      val feature: JSONObject? = features!!.get(0) as JSONObject?
+      
+      val geometry: JSONObject? = feature!!.get("geometry") as JSONObject?
+      
+      val coordinate: JSONArray? = geometry!!.get("coordinates") as JSONArray?
+      
+      if (coordinate!!.size != null && coordinate!!.size != 0) {
+        filelist.add(jj.filename)
+      }
+    }
+    
+    
+    val json = Gson().toJson(filelist)
+    return json
+  }
+  
+  @Throws
   fun getTifImgList(lat: Double, lon: Double): String {
     val list = convertLatLonToUTMK(lat, lon)
     val X = list[0] + 1000

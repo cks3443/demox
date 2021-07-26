@@ -35,6 +35,15 @@ class MainController {
   fun getGeoJsonFileList(@RequestParam lat: Double, @RequestParam lon: Double) =
     jsonService.getGeoJsonFileList(lat, lon)
   
+  @GetMapping("/getgeojsonlist_in_range")
+  @ResponseBody
+  fun getGeoJsonFileListInRange(
+    @RequestParam lat: Double,
+    @RequestParam lon: Double,
+    @RequestParam range: Int
+  ) =
+    jsonService.getGeoJsonFileListInRange(lat, lon, range)
+  
   @GetMapping("/gettiflist")
   @ResponseBody
   fun getTifImgList(@RequestParam lat: Double, @RequestParam lon: Double) = jsonService.getTifImgList(lat, lon)
